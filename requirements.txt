@@ -1,3 +1,5 @@
+
 flask==2.3.2
-gunicorn==20.1.0  # Necesario para Render
-pyodbc==4.0.39  # Recomendado para SQL Server
+gunicorn==20.1.0
+pyodbc==4.0.39
+python-dotenv==1.0.0

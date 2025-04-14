@@ -1,9 +1,9 @@
 from flask import Flask
 import pyodbc
 import os
-from dotenv import load_dotenv  # Solo para desarrollo local
+from dotenv import load_dotenv
 
-load_dotenv()  # Carga variables de .env (solo en local)
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -12,12 +12,22 @@ server = os.getenv('SQL_SERVER')
 database = os.getenv('SQL_DATABASE')
 username = os.getenv('SQL_USERNAME')
 password = os.getenv('SQL_PASSWORD')
-port = os.getenv('SQL_PORT', '1433')  # Valor por defecto
+port = os.getenv('SQL_PORT', '1433')
 
 @app.route("/")
 def home():
     try:
-        conn_str = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server},{port};DATABASE={database};UID={username};PWD={password}'
+        # Cadena de conexión compatible con Render
+        conn_str = f"""
+            DRIVER=ODBC Driver 17 for SQL Server;
+            SERVER={server},{port};
+            DATABASE={database};
+            UID={username};
+            PWD={password};
+            Encrypt=yes;
+            TrustServerCertificate=yes;
+        """
+        
         conn = pyodbc.connect(conn_str)
         cursor = conn.cursor()
         cursor.execute("SELECT TOP 1 name FROM sys.tables")
